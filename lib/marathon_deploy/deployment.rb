@@ -114,7 +114,12 @@ module MarathonDeploy
     raise ArgumentError, "deploymentId must be specified to cancel deployment", caller if (deploymentId.empty?)
     if (running_for_deployment_id?)
       response = HttpUtil.delete(@url + MarathonDefaults::MARATHON_DEPLOYMENT_REST_PATH + deploymentId + "?force=#{force}")
-      $LOG.debug("Cancellation response [#{response.code}] => " + JSON.pretty_generate(JSON.parse(response.body)))
+      begin
+        body = JSON.pretty_generate(JSON.parse(response.body))
+      rescue JSON::ParserError => e
+        body = '(no body)'
+      end
+      $LOG.debug("Cancellation response [#{response.code}] => #{body}")
     end
     return response
   end
