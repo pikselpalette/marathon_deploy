@@ -61,7 +61,7 @@ module MarathonDeploy
       deployment.wait_for_deployment_id 
     rescue Timeout::Error => e
       $LOG.error("Timed out waiting for deployment of #{application.id} to complete. Canceling deploymentId #{deployment.deploymentId} and rolling back!")
-      deployment.cancel(deployment.deploymentId)
+      deployment.cancel(deployment.deploymentId, true)
       raise Timeout::Error, "Deployment of #{application.id} timed out after #{deployment.timeout} seconds", caller
     end 
      
